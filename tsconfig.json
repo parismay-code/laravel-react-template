@@ -1,17 +1,23 @@
 {
     "compilerOptions": {
-        "target": "ES2020",
-        "types": ["vite/client"],
+        "target": "ESNext",
         "useDefineForClassFields": true,
         "lib": [
-            "ES2020",
+            "ESNext",
             "DOM",
             "DOM.Iterable"
         ],
-        "module": "ESNext",
+        "types": [
+            "vite/client"
+        ],
+        "allowJs": true,
         "skipLibCheck": true,
+        "esModuleInterop": false,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "ESNext",
         /* Bundler mode */
-        "moduleResolution": "bundler",
+        "moduleResolution": "Node",
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
@@ -24,7 +30,8 @@
         "noFallthroughCasesInSwitch": true
     },
     "include": [
-        "./resources/ts"
+        "./resources/ts",
+        ".eslintrc.cjs"
     ],
     "references": [
         {

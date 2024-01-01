@@ -7,7 +7,6 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,8 +63,10 @@ class AuthController extends Controller
         ])->withCookie($cookie);
     }
 
-    public function user(Request $request): JsonResource
+    public function user(Request $request): Response
     {
-        return new UserResource($request->user());
+        return response()->json([
+            'user' => new UserResource($request->user()),
+        ]);
     }
 }

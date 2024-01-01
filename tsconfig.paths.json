@@ -17,11 +17,11 @@
             "@interfaces/*": [
                 "./interfaces/*"
             ],
-            "@loaders/*": [
-                "./loaders/*"
-            ],
             "@pages/*": [
                 "./pages/*"
+            ],
+            "@services/*": [
+                "./services/*"
             ],
             "@stores/*": [
                 "./stores/*"

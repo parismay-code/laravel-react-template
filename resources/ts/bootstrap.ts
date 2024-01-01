@@ -1,34 +1,33 @@
-import axios, { AxiosInstance } from 'axios';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 declare global {
-  interface Window {
-    axios: AxiosInstance,
-    Pusher: typeof Pusher,
-    Echo: Echo,
-  }
+    interface Window {
+        Pusher: typeof Pusher;
+        Echo: Echo;
+    }
 }
 
-window.axios = axios;
+const env = (key: string, defaultValue: string = ''): string => {
+    if (Object.hasOwn(import.meta.env, key) && import.meta.env[key]) {
+        return import.meta.env[key];
+    }
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['Content-Type'] = 'application/json';
-window.axios.defaults.headers.common['Accept'] = 'application/json';
-
-window.axios.defaults.withCredentials = true;
-
-window.axios.defaults.baseURL = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/api`;
+    return defaultValue;
+};
 
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
-  broadcaster: 'pusher',
-  key: import.meta.env.VITE_PUSHER_APP_KEY,
-  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-  wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
-  wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
-  wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-  forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
-  enabledTransports: ['ws', 'wss'],
+    broadcaster: 'pusher',
+    key: env('VITE_PUSHER_APP_KEY'),
+    cluster: env('VITE_PUSHER_APP_CLUSTER', 'mt1'),
+    wsHost: env(
+        'VITE_PUSHER_HOST',
+        `ws-${env('VITE_PUSHER_APP_CLUSTER')}.pusher.com`,
+    ),
+    wsPort: env('VITE_PUSHER_PORT', '80'),
+    wssPort: env('VITE_PUSHER_PORT', '443'),
+    forceTLS: env('VITE_PUSHER_SCHEME', 'https') === 'https',
+    enabledTransports: ['ws', 'wss'],
 });
