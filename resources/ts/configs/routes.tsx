@@ -1,19 +1,33 @@
-import type { RouteObject } from 'react-router-dom';
+import { Outlet, type RouteObject } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import ProtectedLayout from '@components/ProtectedLayout';
+import GlobalErrors from '@components/GlobalErrors';
 
 const routes: Array<RouteObject> = [
     {
-        path: '/auth',
-        element: <div>Auth</div>,
-    },
-    {
-        path: '/',
-        element: <ProtectedLayout />,
+        element: (
+            <ErrorBoundary FallbackComponent={GlobalErrors}>
+                <Outlet />
+            </ErrorBoundary>
+        ),
         children: [
             {
-                path: '/',
-                element: <div>Home Page</div>,
+                path: '/auth',
+                element: <div>Auth</div>,
+            },
+            {
+                element: <ProtectedLayout />,
+                children: [
+                    {
+                        path: '/',
+                        element: <div>Home Page</div>,
+                    },
+                ],
+            },
+            {
+                path: '*',
+                element: <div>404</div>,
             },
         ],
     },

@@ -1,4 +1,5 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
 
@@ -7,12 +8,14 @@ import AuthApiService from '@services/api/auth/AuthApiService';
 import { setUser } from '@stores/authReducer';
 import { useSelector } from '@stores/rootReducer';
 
+const authService = new AuthApiService();
+
 function ProtectedLayout() {
     const dispatch = useDispatch();
 
     const authStore = useSelector((state) => state.auth);
 
-    const authService = new AuthApiService();
+    const navigate = useNavigate();
 
     useQuery({
         queryKey: ['auth'],
@@ -20,18 +23,16 @@ function ProtectedLayout() {
         onSuccess: (user) => {
             dispatch(setUser(user));
         },
-        onError: () => {
-            localStorage.removeItem('user');
-            window.location.href = '/auth';
-        },
         staleTime: 120 * 60 * 1000,
         cacheTime: 120 * 60 * 1000,
         retry: false,
     });
 
-    if (!authStore.user) {
-        return <Navigate to="/auth" />;
-    }
+    useEffect(() => {
+        if (!authStore.user) {
+            navigate(-1);
+        }
+    }, [navigate, authStore.user]);
 
     return <Outlet />;
 }
